@@ -1,5 +1,9 @@
 // ESTADO DE LA APP
+// CONEXIÓN CON SUPABASE
+const SUPABASE_URL = 'https://rkoiyuwbuhxktdrkazdh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_M4JShAaDtO_GtEsrNUpgKw_QpaGkJQQ';
 
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // Array donde guardamos temporalmente los productos (más adelante vendrá de Supabase)
 let productos = [];
 
@@ -165,22 +169,62 @@ btnIrALista.addEventListener('click', () => {
 
 
 // ===== MARCAR / DESMARCAR PRODUCTO COMO COMPRADO =====
-function alternarComprado(id) {
+async function alternarComprado(id) {
   const producto = productos.find((producto) => producto.id === id);
-  producto.comprado = !producto.comprado;
+  const nuevoEstado = !producto.comprado;
+
+  // Actualizamos primero en Supabase
+  const { error } = await supabaseClient
+    .from('products')
+    .update({ purchased: nuevoEstado })
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error al actualizar producto:', error);
+    return;
+  }
+
+  // Si ha ido bien, actualizamos también en memoria y redibujamos
+  producto.comprado = nuevoEstado;
   pintarLista();
 }
 
 
 // ===== ELIMINAR UN PRODUCTO =====
-function eliminarProducto(id) {
+async function eliminarProducto(id) {
+  const { error } = await supabaseClient
+    .from('products')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error al eliminar producto:', error);
+    return;
+  }
+
   productos = productos.filter((producto) => producto.id !== id);
   pintarLista();
-}
+}  
 
 
 // ===== ELIMINAR TODOS LOS PRODUCTOS COMPRADOS =====
-btnEliminarComprados.addEventListener('click', () => {
+btnEliminarComprados.addEventListener('click', async () => {
+  const idsAEliminar = productos
+    .filter((producto) => producto.comprado)
+    .map((producto) => producto.id);
+
+  if (idsAEliminar.length === 0) return;
+
+  const { error } = await supabaseClient
+    .from('products')
+    .delete()
+    .in('id', idsAEliminar);
+
+  if (error) {
+    console.error('Error al eliminar comprados:', error);
+    return;
+  }
+
   productos = productos.filter((producto) => !producto.comprado);
   pintarLista();
 });
@@ -228,3 +272,26 @@ function actualizarContador() {
   const pendientes = productos.filter((producto) => !producto.comprado).length;
   contador.textContent = `${pendientes} producto${pendientes !== 1 ? 's' : ''} pendiente${pendientes !== 1 ? 's' : ''}`;
 }
+
+// ===== CARGAR PRODUCTOS DESDE SUPABASE AL ABRIR LA PÁGINA =====
+async function cargarProductos() {
+  const { data, error } = await supabaseClient
+    .from('products')
+    .select('*')
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('Error al cargar productos:', error);
+    return;
+  }
+
+  productos = data.map((fila) => ({
+    id: fila.id,
+    nombre: fila.name,
+    comprado: fila.purchased
+  }));
+
+  pintarLista();
+}
+
+cargarProductos();
