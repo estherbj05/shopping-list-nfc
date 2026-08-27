@@ -1,5 +1,7 @@
 // ESTADO DE LA APP
-
+// CONEXIÓN CON SUPABASE
+const SUPABASE_URL = 'https://rkoiyuwbuhxktdrkazdh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_M4JShAaDtO_GtEsrNUpgKw_QpaGkJQQ';
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // Array donde guardamos temporalmente los productos (más adelante vendrá de Supabase)
