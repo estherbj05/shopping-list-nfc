@@ -51,28 +51,36 @@ btnVolver.addEventListener('click', mostrarVistaHabituales);
 
 
 // AÑADIR PRODUCTO A LA LISTA (función reutilizable)
-function agregarProducto(nombre) {
+async function agregarProducto(nombre) {
   nombre = nombre.trim();
-  // Quita espacios sobrantes al principio/final
-
   if (nombre === '') return;
-  // Si está vacío, no hacemos nada
 
   const yaExiste = productos.some(
     (producto) => producto.nombre.toLowerCase() === nombre.toLowerCase()
   );
-  // Comprobamos si ya existe (sin distinguir mayúsculas/minúsculas)
 
   if (yaExiste) {
     alert('Ese producto ya está en la lista');
     return;
   }
 
-  // Usamos crypto.randomUUID() para generar un id verdaderamente único 
+  // Insertamos en Supabase y le pedimos que nos devuelva la fila creada
+  const { data, error } = await supabaseClient
+    .from('products')
+    .insert({ name: nombre, purchased: false })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error al añadir producto:', error);
+    return;
+  }
+
+  // Usamos el id real que ha generado Supabase, no uno inventado en el navegador
   productos.push({
-    id: crypto.randomUUID(), 
-    nombre: nombre,
-    comprado: false
+    id: data.id,
+    nombre: data.name,
+    comprado: data.purchased
   });
 
   pintarLista();
