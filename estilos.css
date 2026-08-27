@@ -1,0 +1,170 @@
+/*RESETEO BÁSICO*/
+* {
+  margin: 0;            /* Quita el margen que traen por defecto los navegadores */
+  padding: 0;            /* Quita el padding que traen por defecto los navegadores */
+  box-sizing: border-box; /* El padding y el border se cuentan dentro del ancho/alto total, no se suman aparte */
+}
+
+/*FONDO GENERAL Y TIPOGRAFÍA*/
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif; /* Tipografía general de toda la app */
+  background: linear-gradient(135deg, #6dd5ed, #2193b0); /* Fondo degradado azul */
+  min-height: 100vh;     /* La página ocupa como mínimo toda la altura de la pantalla */
+  display: flex;          /* Activa flexbox para poder centrar el contenido */
+  justify-content: center; /* Centra la tarjeta .app horizontalmente */
+  padding: 20px;          /* Deja un margen de aire alrededor de la tarjeta */
+}
+
+/*TARJETA PRINCIPAL DE LA APP*/
+.app {
+  background: white;         /* Fondo blanco de la tarjeta */
+  width: 100%;                /* Ocupa todo el ancho disponible*/
+  max-width: 420px;           
+  border-radius: 20px;        /* Bordes redondeados*/
+  padding: 24px 20px;         /* Espacio interior*/
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra suave para dar sensación de tarjeta flotante */
+  height: fit-content;        /* La altura se ajusta al contenido, no se estira de más */
+}
+
+/*TÍTULO*/
+h1 {
+  text-align: center;   /* Centra el texto del título */
+  font-size: 1.6rem;    /* Tamaño de letra del título */
+  color: #2193b0;       /*Color azul, a juego con el fondo*/
+  margin-bottom: 8px;   /* Espacio debajo del título */
+}
+
+/*CONTADOR DE PENDIENTES*/
+#contador {
+  text-align: center;   /* Centra el texto */
+  color: #777;           /* Gris suave, texto secundario */
+  font-size: 0.9rem;     /* Letra algo más pequeña que el resto */
+  margin-bottom: 20px;   /* Espacio antes del input */
+}
+
+/*INPUT PARA AÑADIR PRODUCTOS*/
+#input-producto {
+  width: 100%;               /* Ocupa todo el ancho de la tarjeta */
+  padding: 14px 16px;        /* Espacio interior, hace el input más grande y fácil de tocar */
+  font-size: 1rem;            /* Tamaño de letra legible */
+  border: 2px solid #eee;    /* Borde gris muy claro */
+  border-radius: 12px;        /* Bordes redondeados */
+  outline: none;               /* Quita el borde azul feo que pone el navegador al hacer focus */
+  transition: border-color 0.2s; /* Anima el cambio de color del borde */
+}
+
+#input-producto:focus {
+  border-color: #2193b0; /* Cuando escribes en el input, el borde se pone azul */
+}
+
+/*LISTA DE PRODUCTOS*/
+#lista-productos {
+  list-style: none;   /* Quita los puntos (bullets) por defecto de la lista */
+  margin-top: 16px;   /* Espacio por encima de la lista */
+}
+
+/*CADA PRODUCTO DE LA LISTA*/
+#lista-productos li {
+  display: flex;              /* Coloca el checkbox y el texto en la misma fila */
+  align-items: center;        /* Centra verticalmente checkbox y texto */
+  gap: 12px;                   /* Espacio entre el checkbox y el texto */
+  padding: 14px 10px;          /* Espacio interior de cada línea de producto */
+  border-bottom: 1px solid #f0f0f0; /* Línea fina separando productos */
+  font-size: 1.05rem;          /* Tamaño de letra del nombre del producto */
+}
+
+/*CHECKBOX DE CADA PRODUCTO*/
+#lista-productos input[type="checkbox"] {
+  width: 22px;           
+  height: 22px;           
+  accent-color: #2193b0; 
+  flex-shrink: 0;        
+}
+
+/* TEXTO DEL PRODUCTO COMPRADO*/
+.comprado {
+  text-decoration: line-through; /* Tacha el texto */
+  color: #aaa;                    /* Color gris, indica que ya no está pendiente */
+}
+
+/*BOTÓN ELIMINAR COMPRADOS*/
+#btn-eliminar-comprados {
+  width: 100%;                 /* Ocupa todo el ancho de la tarjeta */
+  margin-top: 20px;             /* Separación respecto a la lista */
+  padding: 14px;                 /* Botón grande, cómodo de pulsar */
+  font-size: 1rem;               /* Tamaño de letra */
+  font-weight: bold;             /* Texto en negrita */
+  color: white;                  /* Texto blanco */
+  background-color: #e74c3c;    /* Fondo rojo, indica acción de "borrar" */
+  border: none;                  /* Sin borde */
+  border-radius: 12px;           /* Bordes redondeados */
+  cursor: pointer;               /* El cursor cambia a "mano" al pasar por encima */
+  transition: background-color 0.2s; /* Anima el cambio de color al pulsar */
+}
+
+#btn-eliminar-comprados:active {
+  background-color: #c0392b; /* Rojo más oscuro mientras se mantiene pulsado */
+}
+
+/* Contenedor de los botones de productos habituales */
+#productos-habituales {
+  display: flex;
+  flex-direction: column;  /* Los botones se apilan uno debajo del otro */
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* Cada botón individual de producto habitual */
+.boton-habitual {
+  background-color: #eaf7fb;
+  color: #2193b0;
+  border: 1px solid #cdeaf2;
+  border-radius: 12px;     
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  text-align: left;          /* Texto alineado a la izquierda */
+  width: 100%;                /* Ocupa todo el ancho de la tarjeta */
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.boton-habitual:active {
+  background-color: #d3edf5;
+}
+
+/* Botón habitual cuando está seleccionado (marcado para comprar) */
+.boton-habitual.seleccionado {
+  background-color: #2193b0;
+  color: white;
+  border-color: #2193b0;
+}
+
+/* Botón "Ir a la lista de la compra" */
+.btn-ir-lista {
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #27ae60;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.btn-ir-lista:active {
+  background-color: #1e8449;
+}
+
+/* Botón para volver a la pantalla de productos habituales */
+#btn-volver {
+  background: none;
+  border: none;
+  color: #2193b0;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding: 0;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <!-- Hace que la página se vea bien en móvil -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi lista de la compra</title>
+  <!-- Conecta el HTML con los estilos -->
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- ============ VISTA 1: PRODUCTOS HABITUALES ============ -->
+    <div id="vista-habituales">
+
+      <h1>🛒 Lista de la compra 🛒</h1>
+
+      <form id="formulario">
+        <input type="text" id="input-producto" placeholder="Escribe un producto..." autocomplete="off">
+      </form>
+
+      <!-- Lista de productos habituales para seleccionar -->
+      <div id="productos-habituales"></div>
+
+      <!-- Botón para pasar a la vista de la lista de la compra -->
+      <button id="btn-ir-a-lista" class="btn-ir-lista" style="display: none;">
+        Ir a la lista de la compra (<span id="contador-seleccionados">0</span>)
+      </button>
+
+    </div>
+
+    <!-- ============ VISTA 2: LISTA DE LA COMPRA ============ -->
+    <div id="vista-lista" style="display: none;">
+
+      <!-- Botón para volver a la pantalla anterior -->
+      <button id="btn-volver">← Volver</button>
+
+      <h1>🛒 Mi lista 🛒</h1>
+
+      <p id="contador">0 productos pendientes</p>
+
+      <ul id="lista-productos">
+        <!-- Aquí se irán añadiendo los productos con JavaScript -->
+      </ul>
+
+      <button id="btn-eliminar-comprados">Eliminar productos comprados</button>
+
+    </div>
+
+  </div>
+
+  <!-- Carga el JavaScript -->
+  <script src="lista.js"></script>
+</body>
+</html>
