@@ -17,6 +17,11 @@
 
       <h1>🛒 Lista de la compra 🛒</h1>
 
+      <!-- Botón para pasar a la vista del menú semanal -->
+      <button id="btn-ir-a-menu" class="btn-ir-menu">
+        🍽️ Menú semanal
+      </button>
+
       <form id="formulario">
         <input type="text" id="input-producto" placeholder="Escribe un producto..." autocomplete="off">
       </form>
@@ -46,6 +51,22 @@
       </ul>
 
       <button id="btn-eliminar-comprados">Eliminar productos comprados</button>
+
+    </div>
+
+    <!-- ============ VISTA 3: MENÚ SEMANAL ============ -->
+    <div id="vista-menu" style="display: none;">
+
+      <!-- Botón para volver a la pantalla anterior -->
+      <button id="btn-volver-menu">← Volver</button>
+
+      <h1>🍽️ Menú semanal 🍽️</h1>
+
+      <p id="subtitulo-menu">Se guarda automáticamente y se sobrescribe cada semana</p>
+
+      <div id="dias-menu">
+        <!-- Aquí se irán añadiendo los días con JavaScript -->
+      </div>
 
     </div>
 

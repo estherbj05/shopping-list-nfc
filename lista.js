@@ -30,24 +30,40 @@ const contadorSeleccionados = document.getElementById('contador-seleccionados');
 let seleccionados = [];
 
 
-// ===== REFERENCIAS A LAS DOS VISTAS =====
+// ===== REFERENCIAS A LAS TRES VISTAS =====
 const vistaHabituales = document.getElementById('vista-habituales');
 const vistaLista = document.getElementById('vista-lista');
+const vistaMenu = document.getElementById('vista-menu');
 const btnVolver = document.getElementById('btn-volver');
+const btnVolverMenu = document.getElementById('btn-volver-menu');
+const btnIrAMenu = document.getElementById('btn-ir-a-menu');
 
 
 // ===== CAMBIAR ENTRE VISTAS =====
+function ocultarTodasLasVistas() {
+  vistaHabituales.style.display = 'none';
+  vistaLista.style.display = 'none';
+  vistaMenu.style.display = 'none';
+}
+
 function mostrarVistaLista() {
-  vistaHabituales.style.display = 'none'; // Ocultamos la pantalla de habituales
+  ocultarTodasLasVistas();
   vistaLista.style.display = 'block';      // Mostramos la pantalla de la lista
 }
 
 function mostrarVistaHabituales() {
-  vistaLista.style.display = 'none';       // Ocultamos la pantalla de la lista
+  ocultarTodasLasVistas();
   vistaHabituales.style.display = 'block'; // Mostramos la pantalla de habituales
 }
 
+function mostrarVistaMenu() {
+  ocultarTodasLasVistas();
+  vistaMenu.style.display = 'block';       // Mostramos la pantalla del menú semanal
+}
+
 btnVolver.addEventListener('click', mostrarVistaHabituales);
+btnVolverMenu.addEventListener('click', mostrarVistaHabituales);
+btnIrAMenu.addEventListener('click', mostrarVistaMenu);
 
 
 // AÑADIR PRODUCTO A LA LISTA (función reutilizable)
@@ -303,3 +319,120 @@ async function cargarProductos() {
 }
 
 cargarProductos();
+
+
+// =====================================================
+// ============== MENÚ SEMANAL (COMIDA Y CENA) ========
+// =====================================================
+// No guardamos historial: solo existe una fila por día de la
+// semana en la tabla "menu_semanal", y se va sobrescribiendo.
+
+const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+const contenedorDiasMenu = document.getElementById('dias-menu');
+
+// Guardamos aquí lo que hay en Supabase: { Lunes: {comida, cena}, ... }
+let menuSemanal = {};
+
+
+// ===== PINTAR LAS TARJETAS DE LOS 7 DÍAS =====
+function pintarMenu() {
+  contenedorDiasMenu.innerHTML = '';
+
+  diasSemana.forEach((dia) => {
+    const datosDia = menuSemanal[dia] || { comida: '', cena: '' };
+
+    const tarjeta = document.createElement('div');
+    tarjeta.classList.add('tarjeta-dia');
+
+    const titulo = document.createElement('h3');
+    titulo.textContent = dia;
+    tarjeta.appendChild(titulo);
+
+    // --- Fila de la comida ---
+    const filaComida = document.createElement('div');
+    filaComida.classList.add('fila-comida');
+
+    const etiquetaComida = document.createElement('span');
+    etiquetaComida.classList.add('etiqueta-comida');
+    etiquetaComida.textContent = 'Comida';
+
+    const inputComida = document.createElement('input');
+    inputComida.type = 'text';
+    inputComida.classList.add('input-comida');
+    inputComida.placeholder = 'Ej: Lentejas';
+    inputComida.value = datosDia.comida || '';
+    inputComida.addEventListener('change', () => {
+      guardarComidaODia(dia, 'comida', inputComida.value);
+    });
+
+    filaComida.appendChild(etiquetaComida);
+    filaComida.appendChild(inputComida);
+    tarjeta.appendChild(filaComida);
+
+    // --- Fila de la cena ---
+    const filaCena = document.createElement('div');
+    filaCena.classList.add('fila-comida');
+
+    const etiquetaCena = document.createElement('span');
+    etiquetaCena.classList.add('etiqueta-comida');
+    etiquetaCena.textContent = 'Cena';
+
+    const inputCena = document.createElement('input');
+    inputCena.type = 'text';
+    inputCena.classList.add('input-comida');
+    inputCena.placeholder = 'Ej: Tortilla';
+    inputCena.value = datosDia.cena || '';
+    inputCena.addEventListener('change', () => {
+      guardarComidaODia(dia, 'cena', inputCena.value);
+    });
+
+    filaCena.appendChild(etiquetaCena);
+    filaCena.appendChild(inputCena);
+    tarjeta.appendChild(filaCena);
+
+    contenedorDiasMenu.appendChild(tarjeta);
+  });
+}
+
+
+// ===== GUARDAR UN CAMPO (COMIDA O CENA) DE UN DÍA CONCRETO =====
+async function guardarComidaODia(dia, campo, valor) {
+  // Actualizamos primero en memoria para que la app no se sienta lenta
+  if (!menuSemanal[dia]) {
+    menuSemanal[dia] = { comida: '', cena: '' };
+  }
+  menuSemanal[dia][campo] = valor;
+
+  // "upsert": si la fila del día ya existe la actualiza, si no existe la crea
+  // onConflict: 'dia' le dice a Supabase que el día es la clave única
+  const { error } = await supabaseClient
+    .from('menu_semanal')
+    .upsert({ dia: dia, [campo]: valor }, { onConflict: 'dia' });
+
+  if (error) {
+    console.error('Error al guardar el menú:', error);
+  }
+}
+
+
+// ===== CARGAR EL MENÚ DESDE SUPABASE =====
+async function cargarMenu() {
+  const { data, error } = await supabaseClient
+    .from('menu_semanal')
+    .select('*');
+
+  if (error) {
+    console.error('Error al cargar el menú:', error);
+    return;
+  }
+
+  menuSemanal = {};
+  data.forEach((fila) => {
+    menuSemanal[fila.dia] = { comida: fila.comida, cena: fila.cena };
+  });
+
+  pintarMenu();
+}
+
+cargarMenu();

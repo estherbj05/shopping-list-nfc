@@ -168,3 +168,98 @@ h1 {
   margin-bottom: 10px;
   padding: 0;
 }
+
+/* Botón para volver desde el menú semanal (mismo estilo que #btn-volver) */
+#btn-volver-menu {
+  background: none;
+  border: none;
+  color: #2193b0;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+/* Botón "Menú semanal" en la pantalla principal */
+.btn-ir-menu {
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2193b0;
+  background-color: white;
+  border: 2px solid #2193b0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.btn-ir-menu:active {
+  background-color: #eaf7fb;
+}
+
+/* Subtítulo explicativo de la vista de menú */
+#subtitulo-menu {
+  text-align: center;
+  color: #777;
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+}
+
+/* Contenedor de todas las tarjetas de días */
+#dias-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Tarjeta de cada día de la semana */
+.tarjeta-dia {
+  border: 1px solid #eaf7fb;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background-color: #fbfeff;
+}
+
+/* Nombre del día */
+.tarjeta-dia h3 {
+  color: #2193b0;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+/* Fila comida/cena dentro de cada tarjeta */
+.fila-comida {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.fila-comida:last-child {
+  margin-bottom: 0;
+}
+
+/* Etiqueta "Comida" / "Cena" */
+.etiqueta-comida {
+  width: 60px;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* Input de texto para cada comida */
+.input-comida {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-comida:focus {
+  border-color: #2193b0;
+}
